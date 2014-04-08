@@ -1,0 +1,161 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/banana.css">
+
+    <script type="text/javascript"
+      src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDxgEKWwMHYsAFk90_VY8a2q5jjjQcWEs8&sensor=true&language=zh_tw&libraries=drawing,geometry">
+    </script>
+    <script type="text/javascript" src="javascripts/sample-paths.js"></script>
+    <script type="text/javascript">
+      var drawingManager;
+      var selectedShape;
+      var gmap;
+      var shapes =[];
+
+      function initialize() {
+        var mapOptions = {
+          center: new google.maps.LatLng(23.039215, 120.239311),
+          zoom: 17,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        gmap = new google.maps.Map(document.getElementById("dvMap"), mapOptions);
+        var polyOption={
+          strokeWeight: 1,
+          fillColor: '#1E90FF',
+          strokeColor:'#1E90FF',
+          fillOpacity: 0.45,
+          editable: true
+        };
+        drawingManager = new google.maps.drawing.DrawingManager({
+          drawingMode: null, //google.maps.drawing.OverlayType.POLYGON,
+          drawingControl: true,
+          drawingControlOptions: {
+            position: google.maps.ControlPosition.TOP_CENTER,
+            drawingModes: [
+              //google.maps.drawing.OverlayType.RECTANGLE,
+              google.maps.drawing.OverlayType.POLYGON
+              ]
+          },
+          polygonOptions: polyOption,
+          rectangleOptions:polyOption, 
+          map: gmap
+        });
+        //drawingManager.setMap(gmap);
+
+        google.maps.event.addListener(drawingManager, 'overlaycomplete', function(e) {
+            
+          // Switch back to non-drawing mode after drawing a shape.
+          drawingManager.setDrawingMode(null);
+          // Add an event listener that selects the newly-drawn shape when the user
+          // mouses down on it.
+          //e.overlay.type = e.type;
+          google.maps.event.addListener(e.overlay, 'click', function() {
+            setSelection(e.overlay);
+          });
+          shapes.push(e.overlay);
+          setSelection(e.overlay);
+          
+        });
+
+        // Clear the current selection when the drawing mode is changed, or when the
+        // map is clicked.
+        google.maps.event.addListener(drawingManager, 'drawingmode_changed', clearSelection);
+        google.maps.event.addListener(gmap, 'click', clearSelection);
+        google.maps.event.addDomListener(document.getElementById('delete-button'), 'click', deleteSelectedShape);
+        google.maps.event.addDomListener(document.getElementById('area-button'), 'click', function (){
+          var sum=0;
+          for(var s in shapes){
+            var shape=shapes[s];
+            sum += google.maps.geometry.spherical.computeArea(shape.getPath());
+          }
+          var pp=parseFloat(document.getElementById('people-text').value);
+          var total = parseInt(sum * pp);
+          console.log("面積："+sum+" 平方公尺，總計約："+ total +" 人。");
+        });
+        google.maps.event.addDomListener(document.getElementById('clear-button'), 'click', clearShapes);
+        google.maps.event.addDomListener(document.getElementById('sample-button'), 'click', loadSampleShapes);
+        
+      }
+
+
+      function clearSelection() {
+        if (selectedShape) {
+          selectedShape.setEditable(false);
+          selectedShape = null;
+        }
+      }
+
+      function setSelection(shape) {
+        clearSelection();
+        selectedShape = shape;
+        shape.setEditable(true);
+        //selectColor(shape.get('fillColor') || shape.get('strokeColor'));
+      }
+
+      function deleteSelectedShape() {
+        if (selectedShape) {
+          var idx = shapes.indexOf(selectedShape);
+          if(idx!=-1){
+            shapes.pop(idx);
+          }
+          selectedShape.setMap(null);
+        }
+      }
+      function clearShapes(){
+        selectedShape = null;
+        for(var s in shapes){
+          shapes[s].setMap(null);
+        }
+        shapes=[];
+      }
+      function loadSampleShapes(){
+        clearShapes();
+        for(var s in SAMPLE_PATHS){
+          var paths = SAMPLE_PATHS[s];
+          var coords = [];
+          for(var c in paths){
+            var node=paths[c];
+            coords.push(new google.maps.LatLng(node.lat,node.lng));
+          }
+          var poly = new google.maps.Polygon({
+            paths: coords,
+            strokeColor: '#1E90FF',
+            strokeOpacity: 1,
+            strokeWeight: 1,
+            fillColor: '#1E90FF',
+            fillOpacity: 0.45
+          });
+          createPolygon(poly);
+        }
+      }
+      
+      function createPolygon(polygon){
+        google.maps.event.addListener(polygon, 'click', function() {
+            setSelection(polygon);
+          });
+          polygon.setMap(gmap);
+          shapes.push(polygon);
+      }
+    </script>
+  </head>
+  <body onload="initialize()">
+    <div id="panel">
+      <div id="color-palette"></div>
+      <div>
+        <ul>
+          <li><button id="delete-button">Delete Selected Shape</button></li>
+          <li><button id="sample-button">Load Sample Shapes</button></li>
+          <li><button id="clear-button">Clear Shapes</button></li>
+          <li><hr></li>
+          <li>每平方公尺 <input type="text" id='people-text' value="3" style="width:30px;"/> 人</li>
+          <li><button id="area-button">計算人數</button></li>
+        </ul>
+        
+        
+      </div>
+    </div>
+    <div id="dvMap"></div>
+  </body>
+</html>
