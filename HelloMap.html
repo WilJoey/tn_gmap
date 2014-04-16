@@ -29,54 +29,62 @@
           <hr>
           </div>
           <section id="main_content">
-            <h3>註冊 google maps api v3 key</h3>
-            <p>
-              <ol>
-                <li>請前往 API 控制台 (位於 https://code.google.com/apis/console)，並登入您的 Google 帳戶。</li>
-                <li>按一下左選單中的 [Services] 連結。</li>
-                <li>啟用 [Google Maps API v3] 服務。</li>
-                <li>按一下左方選單中的 [API Access]。您可以從 [API Access] 頁面的 [Simple API Access] 區段取得 API 金鑰。Maps API 應用程式會使用 [Key for browser apps]。</li>
-              </ol>
-              <img src="images/api_console_key.jpg" alt="api_console_key">
-            </p>
-<hr>
-            <h3>Hello, google maps</h3>
-            <p>新增一個 index.html</p>
-<pre class="prettyprint lang-html" ><code>&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-  &lt;head&gt;
+            <h2>Hello Map 範例</h2>
+            <h3>將地圖加入網頁中 (HelloMap.html)</h3>
+            
+            
+            
+<pre class="prettyprint lang-html" ><code>&lt;!doctype html&gt;
+&lt;html lang="zh_tw"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;Document&lt;/title&gt;
     &lt;meta name="viewport" content="initial-scale=1.0, user-scalable=no" /&gt;
     &lt;style type="text/css"&gt;
-      html { height: 100% }
-      body { height: 100%; margin: 0; padding: 0 }
-      #map_canvas { height: 100% }
+        html { height: 100%; }
+        body { height: 100%; margin: 0; padding: 0; }
     &lt;/style&gt;
     &lt;script type="text/javascript"
-      src="http://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&sensor=true&language=ja"&gt;
+            src="http://maps.googleapis.com/maps/api/js?key=&sensor=false"&gt;
     &lt;/script&gt;
     &lt;script type="text/javascript"&gt;
-      function initialize() {
-        var mapOptions = {
-          center: new google.maps.LatLng(23.039215, 120.239311),
-          zoom: 17,
-          mapTypeId: google.maps.MapTypeId.ROADMAP
-        };
-        var map = new google.maps.Map(document.getElementById("map_canvas"),
-            mapOptions);
-      }
+        var gmap;
+        var x = 121.517647;
+        var y = 25.039059;
+        function initialize() {
+            var mapOptions = {
+                center: new google.maps.LatLng(y, x),
+                zoom: 17,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+            gmap = new google.maps.Map(document.getElementById("map_canvas"),
+                mapOptions);
+
+        }
     &lt;/script&gt;
-  &lt;/head&gt;
-  &lt;body onload="initialize()"&gt;
-    &lt;div id="map_canvas" style="width:100%; height:100%"&gt;&lt;/div&gt;
-  &lt;/body&gt;
+&lt;/head&gt;
+&lt;body onload="initialize()"&gt;
+    &lt;div id="map_canvas" style="width:100%; height:100%"&gt;Hello world!&lt;/div&gt;
+&lt;/body&gt;
 &lt;/html&gt;
+
 </code></pre>
             
-            <h3>[爆卦] 現場人數分享</h3>
-            <p>
-              <img src="images/20140330凱道統計.jpg" alt="">
-            </p>
-            <div id="next"><a href="HelloWorld.html">&gt;&gt; Next: HelloWorld &gt;&gt;</a></div>
+            <h3>地圖 DOM 元素</h3>
+<pre class="prettyprint lang-html" ><code>&lt;div id="map_canvas" style="width: 100%; height: 100%"&gt;&lt;/div&gt;
+</code></pre>
+
+<h3>地圖類型</h3>
+<p>此時您也必須明確設定初始地圖類型。</p>
+<pre class="prettyprint lang-javascript">  mapTypeId: google.maps.MapTypeId.ROADMAP</pre>
+<p>支援的地圖類型如下：</p>
+<ul>
+  <li><code>ROADMAP</code> 顯示 Google 地圖的正常、預設 2D 地圖方塊。</li>
+  <li><code>SATELLITE</code> 可顯示攝影地圖方塊。</li>
+  <li><code>HYBRID</code> 可顯示混合攝影地圖方塊與重要地圖項 (道路、城市名稱) 的地圖方塊圖層。</li>
+  <li><code>TERRAIN</code> 可顯示實際起伏的地圖方塊，以呈現海拔高度和水域圖徵 (山嶽、河流等)。</li>
+</ul>
+            <div id="next"><a href="HelloPoi.html">&gt;&gt; Next: HelloPoi &gt;&gt; </a></div>
           </section>
           <footer>
             Tn gmap is maintained by <a href="https://github.com/WilJoey">WilJoey</a><br>

@@ -1,0 +1,60 @@
+﻿<!doctype html>
+<html lang="zh_tw">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+        html { height: 100%; }
+        body { height: 100%; margin: 0; padding: 0; }
+    </style>
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDxgEKWwMHYsAFk90_VY8a2q5jjjQcWEs8&sensor=true&language=zh_tw&libraries=drawing,geometry">
+    </script>
+    <script type="text/javascript">
+        var gmap;
+        var x = 121.517647;
+        var y = 25.039059;
+        function initialize() {
+            var mapOptions = {
+                center: new google.maps.LatLng(y, x),
+                zoom: 17,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+            gmap = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
+
+            var polyOption = {
+                strokeWeight: 1,
+                fillColor: '#1E90FF',
+                strokeColor: '#1E90FF',
+                fillOpacity: 0.45,
+                editable: true
+            };
+            var drawingManager = new google.maps.drawing.DrawingManager({
+                drawingMode: null, //google.maps.drawing.OverlayType.POLYGON,
+                drawingControl: true,
+                drawingControlOptions: {
+                    position: google.maps.ControlPosition.TOP_CENTER,
+                    drawingModes: [
+                        //google.maps.drawing.OverlayType.RECTANGLE,
+                        google.maps.drawing.OverlayType.POLYGON
+                    ]
+                },
+                polygonOptions: polyOption,
+                rectangleOptions: polyOption,
+                map: gmap
+            });
+
+            google.maps.event.addListener(drawingManager, 'overlaycomplete', function (e) {
+                var pp = 3;
+                drawingManager.setDrawingMode(null);
+                var area = google.maps.geometry.spherical.computeArea(e.overlay.getPath());
+                alert("約有 " + parseInt(area * 3) + " 人");
+
+            });
+        }
+    </script>
+</head>
+<body onload="initialize()">
+    <div id="map_canvas" style="width:100%; height:100%">Hello world!</div>
+</body>
+</html>

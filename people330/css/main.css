@@ -1,0 +1,60 @@
+﻿#dvMap, html, body {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+}
+
+#panel {
+  width: 200px;
+  font-family: Arial, sans-serif;
+  font-size: 13px;
+  float: right;
+  margin: 10px;
+}
+
+#color-palette {
+  clear: both;
+}
+
+.color-button {
+  width: 14px;
+  height: 14px;
+  font-size: 0;
+  margin: 2px;
+  float: left;
+  cursor: pointer;
+}
+
+#delete-button {
+  margin-top: 5px;
+}
+
+dl, dt, dd, ol, ul, li{
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+ol, ul {
+  list-style: none;
+}
+ul, ol, dl {
+  margin-bottom: 20px;
+}
+ul li {
+  /*list-style: disc inside;*/
+  padding-left: 10px;
+}
+li {
+  margin:10px 2px;
+}
+
+#dvInfo {
+  background-color: #EEE; 
+  font-size: 1.1em;
+  font-weight: bold;
+  padding: 10px;
+  color: #A00
+}
